@@ -1,0 +1,60 @@
+<body>
+	<div>
+		<table id="navigation_bar">
+			<tr>
+				<td class="bar_image"><a routerLink="/submissions"><img class="image_y" src="/assets\logo.gif"></a></td>
+				<td class="main_bar"><a routerLink="/submissions"><div id="hacker_news_title">Hacker News</div></a></td>
+				<td class="main_bar"style="margin-left: 5px"><a routerLink="/newest">new</a> |</td>
+				<div *ngIf="globals.api_key != ''">
+					<td class="main_bar"><a routerLink="/threads">threads</a> |</td>
+				</div>
+				<td class="main_bar"><a routerLink="/ask">ask</a> |</td>
+				<td class="main_bar"><a routerLink="/submit">submit</a></td>
+				<td class="last_bar" *ngIf="globals.api_key == ''; else showLogout"><a style="cursor: pointer;" id="googleBtn">login</a></td>
+				<ng-template #showLogout>
+					<td style="color: #000000" class="last_bar">
+						<a routerLink="/user/{{globals.user_id}}" style="font-weight:bold;">{{globals.user_name}}</a>
+						<a style="cursor: pointer;" (click)="logout()"> | logout</a></td>
+				</ng-template>
+			</tr>
+		</table>
+	</div>
+
+<table class="common_table">
+	<div *ngIf="user">
+		<tr>
+			<td><div class="user_params">name: </div></td>
+			<td><div class="user_name">{{user.name}}</div></td>
+		</tr>
+		<tr>
+			<td><div class="user_params">created: </div></td>
+			<td><div class="user_params">{{user.created_at | date:'dd/MM/yyyy'}}</div></td>
+		</tr>
+		<tr>
+			<td><div class="user_params">karma: </div></td>
+			<td><div class="user_params">{{user.karma}}</div></td>
+		</tr>
+		<tr>
+			<td><div class="user_params">email: </div></td>
+			<td><div class="user_params">{{user.email}}</div></td>
+		</tr>
+		<tr>
+			<td><div class="user_params">about: </div></td>
+			<td *ngIf="userCanUpdate; else cannot_update">
+				<textarea [(ngModel)]="user_about" class="input_text"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<ng-template #cannot_update>
+				<td>
+					<div class="user_params">{{user.about}}</div>
+				</td>
+			</ng-template>
+		</tr>
+		<tr *ngIf="userCanUpdate">
+			<td></td>
+			<td><button (click)="updateButtonPressed()">update</button></td>
+		</tr>
+	</div>
+</table>
+</body>

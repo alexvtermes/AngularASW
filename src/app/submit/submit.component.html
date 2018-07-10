@@ -1,0 +1,46 @@
+<body>
+	<div>
+		<table id="navigation_bar">
+			<tr>
+				<td class="bar_image"><a routerLink="/submissions"><img class="image_y" src="/assets\logo.gif"></a></td>
+				<td class="main_bar"><a routerLink="/submissions"><div id="hacker_news_title">Hacker News</div></a></td>
+			</tr>
+		</table>
+	</div>
+  <table class="common_table">
+			<tr>
+				<td></td>
+				<td *ngIf="error_message">
+					<p class="error_message">{{error_message}}</p>
+				</td>
+			</tr>
+			<tr>
+        <td class="param">title</td>
+        <td><input type="text" [(ngModel)]="submit_title" class="input"></td>
+      </tr>
+      <tr>
+        <td class="param">url</td>
+        <td><input type="text" [(ngModel)]="submit_url" class="input"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="submit_or">OR</td>
+      </tr>
+      <tr>
+        <td class="param">text</td>
+        <td><textarea [(ngModel)]="submit_text" class="input_text"></textarea></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><button (click)="submitButtonPressed()">submit</button></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="param">Leave url blank to submit a question for discussion. If there is no url, the text (if any) will appear at the top of the thread.</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="param">You can also submit via bookmarklet .</td>
+      </tr>
+  </table>
+</body>

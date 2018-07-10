@@ -1,0 +1,38 @@
+<body>
+	<div>
+		<table id="navigation_bar">
+			<tr>
+				<td class="bar_image"><a routerLink="/submissions"><img class="image_y" src="/assets\logo.gif"></a></td>
+				<td class="main_bar"><div id="hacker_news_title">Add Comment</div></td>
+			</tr>
+		</table>
+	</div>
+  <table class="common_table">
+    <div *ngIf="reply">
+		<tr>
+			<td *ngIf="error_message">
+				<p class="error_message">{{error_message}}</p>
+			</td>
+		</tr>
+  	<tr class="reply_row">
+      <div style="margin-top:5px">
+        <td>
+          <div style="color:orange; display:inline;">*</div> <div class="reply_attr"> {{reply[0].user_name}}</div> {{reply[0].created_at | date:'dd/MM/yyyy hh:mm'}} |
+          <div class="reply_attr">parent</div> | on: <div class="reply_attr">{{reply[0].submission_title}}</div>
+        </td>
+      </div>
+    </tr>
+    <tr>
+      <td>
+        <div style="margin-left:5px; color: black; font-size: 14px;">{{reply[0].content}}</div>
+      </td>
+    </tr>
+    <tr>
+      <td><textarea [(ngModel)]="reply_text" class="input_text"></textarea></td>
+    </tr>
+    <tr>
+      <td><button (click)="replyButtonPressed(reply[0].id, reply[0].submission_id)">reply</button></td>
+    </tr>
+  </div>
+  </table>
+</body>

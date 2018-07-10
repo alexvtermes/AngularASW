@@ -1,0 +1,40 @@
+.main_bar {
+  float:left;
+  font-size: 14px;
+  color:#111111;
+  line-height: 16pt;
+  height: 10px;
+  margin-right: 2px;
+}
+
+a {
+  text-decoration: none;
+  color:#111111;
+}
+
+#hacker_news_title {
+  color:#111111;
+  font-weight: bold;
+}
+
+#navigation_bar {
+  background-color: #ff6600;
+  width: 100%;
+}
+
+.last_bar {
+  text-align:right;
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.bar_image {
+  width: 18px;
+  padding-right: 4px;
+}
+
+.image_y {
+  border: 1px #ffffff solid;
+  width:18px;
+  height: 18px;
+}

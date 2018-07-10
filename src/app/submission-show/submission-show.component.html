@@ -1,0 +1,221 @@
+<body>
+	<div>
+		<table id="navigation_bar">
+			<tr>
+				<td class="bar_image"><a routerLink="/submissions"><img class="image_y" src="/assets\logo.gif"></a></td>
+				<td class="main_bar"><a routerLink="/submissions"><div id="hacker_news_title">Hacker News</div></a></td>
+				<td class="main_bar" style="margin-left: 5px"><a routerLink="/newest">new</a> |</td>
+				<div *ngIf="globals.api_key != ''">
+					<td class="main_bar"><a routerLink="/threads">threads</a> |</td>
+				</div>
+				<td class="main_bar"><a routerLink="/ask">ask</a> |</td>
+				<td class="main_bar"><a routerLink="/submit">submit</a></td>
+				<td class="last_bar" *ngIf="globals.api_key == ''; else showLogout"><a style="cursor: pointer;" id="googleBtn">login</a></td>
+				<ng-template #showLogout>
+					<td style="color: #000000" class="last_bar">
+						<a routerLink="/user/{{globals.user_id}}" style="font-weight:bold;">{{globals.user_name}}</a>
+						<a style="cursor: pointer;" (click)="logout()"> | logout</a></td>
+				</ng-template>
+			</tr>
+		</table>
+	</div>
+<table class="common_table">
+	<tr>
+		<td *ngIf="error_message">
+			<p class="error_message">{{error_message}}</p>
+		</td>
+	</tr>
+  <div *ngIf="submission">
+    <tr>
+      <td></td>
+			<td>
+        <div class="submission_title">
+          {{submission.title}}
+        </div>
+				<div class="submission_url" *ngIf="submission.url">
+        	<div class="submission_url">
+          	<a style="color: #828282" href="{{submission.url}}">({{submission.url}})</a>
+        	</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+        <div class="submission_underline">
+          {{submission.votes}} score by
+					<a style="color: #828282" routerLink="/user/{{submission.user_creator_id}}"> {{submission.user_name}}</a>
+					 | {{submission.created_at | date:'dd/MM/yyyy hh:mm'}} |
+					 <div style="display: inline" *ngIf="submission.comments; else discuss">
+					 		<a style="color: #828282" routerLink="/submission/{{submission.id}}"> {{submission.comments}} comments</a>
+					 </div>
+					 <ng-template #discuss>
+						 <a style="color: #828282" routerLink="/submission/{{submission.id}}"> discuss</a>
+					</ng-template>
+					|
+					<a style="color: #828282; cursor: pointer;"  (click)="doVoteSubmission(submission.id)"> vote</a>
+					|
+					<a style="color: #828282; cursor: pointer;" (click)="doUnvoteSubmission(submission.id)"> unvote</a>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><textarea class="input_text" [(ngModel)]="textarea_comment"></textarea></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><button class="button" style="margin-top: 10px" (click)="doComment()">add comment</button></td>
+		</tr>
+	</div>
+</table>
+<table class="common_table">
+		<div *ngIf="comments">
+			<div style="margin-top: 20px;" *ngFor="let comment of comments;">
+				<tr>
+					<td>
+						<div *ngIf="globals.user_id == comment.user_id" class="vote_image">
+							<font style="color: orange">*</font>
+						</div>
+					</td>
+					<td>
+						<div style="font-size: 8pt;" class="submission_underline">
+							<a style="color: #828282" routerLink="/user/{{comment.user_id}}"> {{comment.user_name}}</a>
+							| {{comment.created_at | date:'dd/MM/yyyy hh:mm'}} | votes: {{comment.votes}}
+							|
+							<a style="color: #828282; cursor: pointer;"  (click)="doVoteComment(comment.id)"> vote</a>
+							|
+							<a style="color: #828282; cursor: pointer;" (click)="doUnvoteComment(comment.id)"> unvote</a>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td style="font-size: 9pt; color: #000000;">{{comment.content}}</td>
+				</tr>
+				<tr>
+					<td></td>
+					<a routerLink="/comment/{{comment.id}}" class="replyButton"> reply</a>
+				</tr>
+				<tr>
+					<td></td>
+					<div *ngIf="comment.replies">
+						<div *ngFor="let reply of comment.replies" style="margin-left: 50px;">
+							<tr>
+								<td>
+									<div *ngIf="globals.user_id == reply.user_id" class="vote_image">
+										<font style="color: orange">*</font>
+									</div>
+								</td>
+								<td>
+									<div style="font-size: 8pt;" class="submission_underline">
+										<a style="color: #828282" routerLink="/user/{{reply.user_id}}"> {{reply.user_name}}</a>
+										| {{reply.created_at | date:'dd/MM/yyyy hh:mm'}} | votes: {{reply.cached_votes_total}}
+										|
+										<a style="color: #828282; cursor: pointer;"  (click)="doVoteReply(reply.id)"> vote</a><!--replies-->
+										|
+										<a style="color: #828282; cursor: pointer;" (click)="doUnvoteReply(reply.id)"> unvote</a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td style="font-size: 9pt; color: #000000;">{{reply.content}}</td>
+							</tr>
+							<tr>
+								<td></td>
+								<a routerLink="/reply/{{reply.id}}" class="replyButton"> reply</a>
+							</tr>
+							<td></td>
+							<div *ngIf="reply.replies">
+								<div *ngFor="let reply2 of reply.replies" style="margin-left: 50px;">
+									<tr>
+										<td>
+											<div *ngIf="globals.user_id == reply2.user_id" class="vote_image">
+												<font style="color: orange">*</font>
+											</div>
+										</td>
+										<td>
+											<div style="font-size: 8pt;" class="submission_underline">
+												<a style="color: #828282" routerLink="/user/{{reply2.user_id}}"> {{reply2.user_name}}</a>
+												| {{reply2.created_at | date:'dd/MM/yyyy hh:mm'}} | votes: {{reply2.cached_votes_total}}
+												|
+												<a style="color: #828282; cursor: pointer;"  (click)="doVoteReply(reply2.id)"> vote</a>
+												|
+												<a style="color: #828282; cursor: pointer;" (click)="doUnvoteReply(reply2.id)"> unvote</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td></td>
+										<td style="font-size: 9pt; color: #000000;">{{reply2.content}}</td>
+									</tr>
+									<tr>
+										<td></td>
+										<a routerLink="/reply/{{reply2.id}}" class="replyButton"> reply</a>
+									</tr>
+									<td></td>
+									<div *ngIf="reply2.replies">
+										<div *ngFor="let reply3 of reply2.replies" style="margin-left: 50px;">
+											<tr>
+												<td>
+													<div *ngIf="globals.user_id == reply3.user_id" class="vote_image">
+														<font style="color: orange">*</font>
+													</div>
+												</td>
+												<td>
+													<div style="font-size: 8pt;" class="submission_underline">
+														<a style="color: #828282" routerLink="/user/{{reply3.user_id}}"> {{reply3.user_name}}</a>
+														| {{reply3.created_at | date:'dd/MM/yyyy hh:mm'}} | votes: {{reply3.cached_votes_total}}
+														|
+														<a style="color: #828282; cursor: pointer;"  (click)="doVoteReply(reply3.id)"> vote</a>
+														|
+														<a style="color: #828282; cursor: pointer;" (click)="doUnvoteReply(reply3.id)"> unvote</a>
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td></td>
+												<td style="font-size: 9pt; color: #000000;">{{reply3.content}}</td>
+											</tr>
+											<tr>
+												<td></td>
+												<a routerLink="/reply/{{reply3.id}}" class="replyButton"> reply</a>
+											</tr>
+											<td></td>
+											<div *ngIf="reply3.replies">
+												<div *ngFor="let reply4 of reply3.replies" style="margin-left: 50px;">
+													<tr>
+														<td>
+															<div *ngIf="globals.user_id == reply4.user_id" class="vote_image">
+																<font style="color: orange">*</font>
+															</div>
+														</td>
+														<td>
+															<div style="font-size: 8pt;" class="submission_underline">
+																<a style="color: #828282" routerLink="/user/{{reply4.user_id}}"> {{reply4.user_name}}</a>
+																| {{reply4.created_at | date:'dd/MM/yyyy hh:mm'}} | votes: {{reply4.cached_votes_total}}
+																|
+																<a style="color: #828282; cursor: pointer;"  (click)="doVoteReply(reply4.id)"> vote</a>
+																|
+																<a style="color: #828282; cursor: pointer;" (click)="doUnvoteReply(reply4.id)"> unvote</a>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td></td>
+														<td style="font-size: 9pt; color: #000000;">{{reply4.content}}</td>
+													</tr>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</tr>
+			</div>
+		</div>
+	</table>
+</body>

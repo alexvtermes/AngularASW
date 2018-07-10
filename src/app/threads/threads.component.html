@@ -1,0 +1,31 @@
+<body>
+	<div>
+		<table id="navigation_bar">
+			<tr>
+				<td class="bar_image"><a routerLink="/submissions"><img class="image_y" src="/assets\logo.gif"></a></td>
+				<td class="main_bar"><a routerLink="/submissions"><div id="hacker_news_title">Hacker News</div></a></td>
+				<td class="main_bar" style="margin-left: 5px"><a routerLink="/newest">new</a> |</td>
+				<td class="main_bar"><a routerLink="/threads">threads</a> |</td>
+				<td class="main_bar"><a routerLink="/ask">ask</a> |</td>
+				<td class="main_bar"><a routerLink="/submit">submit</a></td>
+			</tr>
+		</table>
+	</div>
+<table class="common_table">
+  <div *ngFor="let thread of threads" class="threads_table">
+  <tr>
+    <td style="color: orange">*</td>
+    <td>
+      {{thread.votes}} points by <a routerLink="/user/{{thread.user_id}}" class="thread_user">{{thread.user_name}}</a> on
+      {{thread.created_at | date:'dd/MM/yyyy hh:mm'}} |
+      <a routerLink="/submission/{{thread.submission_id}}" class="thread_link">parent</a> on:
+      <a routerLink="/submission/{{thread.submission_id}}" class="thread_link">{{thread.submission_title}}</a>
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="font-size: 14px">{{thread.content}}</td>
+  </tr>
+</div>
+</table>
+</body>

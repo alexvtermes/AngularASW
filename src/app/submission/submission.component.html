@@ -1,0 +1,71 @@
+<body>
+	<div>
+		<table id="navigation_bar">
+			<tr>
+				<td class="bar_image"><a routerLink="/submissions"><img class="image_y" src="/assets\logo.gif"></a></td>
+				<td class="main_bar"><a routerLink="/submissions"><div id="hacker_news_title">Hacker News</div></a></td>
+				<td class="main_bar" style="margin-left: 5px"><a routerLink="/newest">new</a> |</td>
+				<div *ngIf="globals.api_key != ''">
+					<td class="main_bar"><a routerLink="/threads">threads</a> |</td>
+				</div>
+				<td class="main_bar"><a routerLink="/ask">ask</a> |</td>
+				<td class="main_bar"><a routerLink="/submit">submit</a></td>
+				<td class="last_bar" *ngIf="globals.api_key == ''; else showLogout"><a style="cursor: pointer;" id="googleBtn">login</a></td>
+				<ng-template #showLogout>
+					<td style="color: #000000" class="last_bar">
+						<a routerLink="/user/{{globals.user_id}}" style="font-weight:bold;">{{globals.user_name}}</a>
+						<a style="cursor: pointer;" (click)="logout()"> | logout</a></td>
+				</ng-template>
+			</tr>
+		</table>
+	</div>
+<table class="common_table">
+	<tr>
+		<td *ngIf="error_message">
+			<p class="error_message">{{error_message}}</p>
+		</td>
+	</tr>
+  <div *ngIf="submissions">
+		<div *ngFor="let submission of submissions; let i=index">
+    <tr>
+      <td>
+				<div style="font-size: 10pt; display: inline;">{{i + 1}}.</div>
+				<div *ngIf="globals.user_id == submission.user_creator_id" class="vote_image">
+					<font style="color: orange">*</font>
+				</div>
+			</td>
+			<td>
+        <div class="submission_title">
+          {{submission.title}}
+        </div>
+				<div class="submission_url" *ngIf="submission.url">
+        	<div class="submission_url">
+          	<a style="color: #828282" href="{{submission.url}}">({{submission.url}})</a>
+        	</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+        <div class="submission_underline">
+          {{submission.votes}} score by
+					<a style="color: #828282" routerLink="/user/{{submission.user_creator_id}}"> {{submission.user_name}}</a>
+					 | {{submission.created_at | date:'dd/MM/yyyy hh:mm'}} |
+					 <div style="display: inline" *ngIf="submission.comments; else discuss">
+					 		<a style="color: #828282" routerLink="/submission/{{submission.id}}"> {{submission.comments}} comments</a>
+					 </div>
+					 <ng-template #discuss>
+						 <a style="color: #828282" routerLink="/submission/{{submission.id}}"> discuss</a>
+					</ng-template>
+					|
+					<a style="color: #828282; cursor: pointer;"  (click)="doVote(submission.id)"> vote</a>
+					|
+					<a style="color: #828282; cursor: pointer;" (click)="doUnvote(submission.id)"> unvote</a>
+        </div>
+      </td>
+    </tr>
+	</div>
+  </div>
+</table>
+</body>
